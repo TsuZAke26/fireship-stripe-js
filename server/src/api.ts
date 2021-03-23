@@ -14,3 +14,23 @@ app.post("/test", (req: Request, res: Response) => {
 
   res.status(200).send({ with_tax: amount * 1.07 });
 });
+
+// Allow Stripe checkout sessions to be created
+import { createStripeCheckoutSession } from "./checkout";
+app.post(
+  "/checkouts/",
+  runAsync(async ({ body }: Request, res: Response) => {
+    res.send(await createStripeCheckoutSession(body.line_items));
+  })
+);
+
+/**
+ * Catch async errors when awaiting promises for asynchronous functions.
+ * @param callback - async function
+ * @returns Resolved async function passed in, or caught error if encountered
+ */
+function runAsync(callback: Function) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    callback(req, res, next).catch(next);
+  };
+}
