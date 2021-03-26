@@ -1,15 +1,9 @@
 <template>
-  <div></div>
+  <div>Customers</div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  setup() {
-    return {};
-  },
-});
+<script>
+export default {
+  name: "Customers",
+};
 </script>
-
-<style scoped></style>

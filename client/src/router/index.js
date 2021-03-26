@@ -1,11 +1,16 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Home from "../views/Home.vue";
-import Checkout from "src/views/Checkout.vue";
-import Customers from "src/views/Customers.vue";
-import Payments from "src/views/Payments.vue";
-import Subscriptions from "src/views/Subscriptions.vue";
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-const routes: Array<RouteRecordRaw> = [
+// View components
+import Home from "../views/Home.vue";
+import Checkout from "../views/Checkout.vue";
+import Customers from "../views/Customers.vue";
+import Payments from "../views/Payments.vue";
+import Subscriptions from "../views/Subscriptions.vue";
+
+Vue.use(VueRouter);
+
+const routes = [
   {
     path: "/",
     name: "Home",
@@ -21,29 +26,30 @@ const routes: Array<RouteRecordRaw> = [
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
   {
-    path: "/",
+    path: "/checkout",
     name: "Checkout",
     component: Checkout,
   },
   {
-    path: "/",
+    path: "/customers",
     name: "Customers",
     component: Customers,
   },
   {
-    path: "/",
+    path: "/payments",
     name: "Payments",
     component: Payments,
   },
   {
-    path: "/",
+    path: "/subscriptions",
     name: "Subscriptions",
     component: Subscriptions,
   },
 ];
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+const router = new VueRouter({
+  mode: "history",
+  base: process.env.BASE_URL,
   routes,
 });
 

@@ -1,4 +1,4 @@
-# fireship-stripe-js-course
+# client
 
 ## Project setup
 ```

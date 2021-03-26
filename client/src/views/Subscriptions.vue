@@ -1,15 +1,9 @@
 <template>
-  <div></div>
+  <div>Subscriptions</div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  setup() {
-    return {};
-  },
-});
+<script>
+export default {
+  name: "Subscriptions",
+};
 </script>
-
-<style scoped></style>

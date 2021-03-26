@@ -1,15 +1,9 @@
 <template>
-  <div></div>
+  <div>Checkout</div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  setup() {
-    return {};
-  },
-});
+<script>
+export default {
+  name: "Checkout",
+};
 </script>
-
-<style scoped></style>
