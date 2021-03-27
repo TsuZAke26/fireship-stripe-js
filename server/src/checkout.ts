@@ -1,6 +1,11 @@
 import { stripe } from "./";
 import Stripe from "stripe";
 
+/**
+ * Creates a Stripe Checkout session with line items
+ * @param line_items Actual line items that user wants to purchase
+ * @returns the Stripe Checkout session
+ */
 export async function createStripeCheckoutSession(
   line_items: Stripe.Checkout.SessionCreateParams.LineItem[]
 ) {
