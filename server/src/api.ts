@@ -15,10 +15,28 @@ app.post("/test", (req: Request, res: Response) => {
   res.status(200).send({ with_tax: amount * 1.07 });
 });
 
+// Retrieve all Stripe Prices
+import { getAllPrices } from "./prices";
+app.get(
+  "/prices-with-product",
+  runAsync(async (req: Request, res: Response) => {
+    res.send(await getAllPrices());
+  })
+);
+
+// Retrieve all Stripe Products
+import { getAllProducts } from "./products";
+app.get(
+  "/products",
+  runAsync(async (req: Request, res: Response) => {
+    res.send(await getAllProducts());
+  })
+);
+
 // Allow Stripe checkout sessions to be created
 import { createStripeCheckoutSession } from "./checkout";
 app.post(
-  "/checkouts/",
+  "/create-checkout-session/",
   runAsync(async ({ body }: Request, res: Response) => {
     res.send(await createStripeCheckoutSession(body.line_items));
   })

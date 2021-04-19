@@ -16,9 +16,19 @@ exports.app.post("/test", (req, res) => {
     const amount = req.body.amount;
     res.status(200).send({ with_tax: amount * 1.07 });
 });
+// Retrieve all Stripe Prices
+const prices_1 = require("./prices");
+exports.app.get("/prices-with-product", runAsync(async (req, res) => {
+    res.send(await prices_1.getAllPrices());
+}));
+// Retrieve all Stripe Products
+const products_1 = require("./products");
+exports.app.get("/products", runAsync(async (req, res) => {
+    res.send(await products_1.getAllProducts());
+}));
 // Allow Stripe checkout sessions to be created
 const checkout_1 = require("./checkout");
-exports.app.post("/checkouts/", runAsync(async ({ body }, res) => {
+exports.app.post("/create-checkout-session/", runAsync(async ({ body }, res) => {
     res.send(await checkout_1.createStripeCheckoutSession(body.line_items));
 }));
 /**

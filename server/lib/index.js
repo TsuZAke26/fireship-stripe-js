@@ -17,5 +17,5 @@ exports.stripe = new stripe_1.default(process.env.STRIPE_SECRET, {
 // Start the API with Express
 const api_1 = require("./api");
 const port = process.env.PORT || 6200;
-api_1.app.listen(port, () => console.log(`API available on ${process.env.BASE_URL || "http://localhost"}:${port}`));
+api_1.app.listen(port, () => console.log(`API available on ${process.env.BASE_URL}:${port}`));
 //# sourceMappingURL=index.js.map

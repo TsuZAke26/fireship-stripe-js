@@ -14,7 +14,5 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET, {
 import { app } from "./api";
 const port = process.env.PORT || 6200;
 app.listen(port, () =>
-  console.log(
-    `API available on ${process.env.BASE_URL || "http://localhost"}:${port}`
-  )
+  console.log(`API available on ${process.env.BASE_URL}:${port}`)
 );
