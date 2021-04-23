@@ -1,17 +1,17 @@
 // Environment variables
-import { config } from "dotenv";
-if (process.env.NODE_ENV !== "production") {
+import { config } from 'dotenv';
+if (process.env.NODE_ENV !== 'production') {
   config();
 }
 
 // Initialize Stripe
-import Stripe from "stripe";
+import Stripe from 'stripe';
 export const stripe = new Stripe(process.env.STRIPE_SECRET, {
-  apiVersion: "2020-08-27",
+  apiVersion: '2020-08-27',
 });
 
 // Start the API with Express
-import { app } from "./api";
+import { app } from './api';
 const port = process.env.PORT || 6200;
 app.listen(port, () =>
   console.log(`API available on ${process.env.BASE_URL}:${port}`)
