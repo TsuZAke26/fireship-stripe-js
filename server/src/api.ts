@@ -42,6 +42,15 @@ app.post(
   })
 );
 
+// Allow Stripe payment intents to be created
+import { createPaymentIntent } from "./payments";
+app.post(
+  "/payments",
+  runAsync(async ({ body }: Request, res: Response) => {
+    res.send(await createPaymentIntent(body.amount));
+  })
+);
+
 /**
  * Catch async errors when awaiting promises for asynchronous functions.
  * @param callback - async function
