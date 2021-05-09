@@ -25,11 +25,7 @@ export default defineComponent({
     ProductCatalog,
   },
   setup() {
-    const handleStripeCheckout = () => {
-      alert('Handing off to Stripe...');
-    };
-
-    return { handleStripeCheckout };
+    return {};
   },
 });
 </script>

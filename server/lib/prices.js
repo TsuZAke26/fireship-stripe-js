@@ -5,7 +5,7 @@ const _1 = require("./");
 // import Stripe from "stripe";
 async function getAllPrices() {
     const prices = await _1.stripe.prices.list({
-        expand: ["data.product"],
+        expand: ['data.product'],
     });
     //   console.log(prices.data);
     return prices.data;

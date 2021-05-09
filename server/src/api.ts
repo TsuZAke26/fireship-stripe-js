@@ -60,6 +60,7 @@ import { createPaymentIntent } from './payments';
 app.post(
   '/payments',
   runAsync(async ({ body }: Request, res: Response) => {
+    // console.log('payments - body: ', body);
     res.send(await createPaymentIntent(body.amount));
   })
 );

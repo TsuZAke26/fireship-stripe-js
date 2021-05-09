@@ -95,6 +95,13 @@ export default defineComponent({
           name: 'Checkout',
         },
       },
+      {
+        label: 'Payment Demo',
+        icon: 'mdi-cash',
+        route: {
+          name: 'PaymentIntent',
+        },
+      },
     ];
 
     return {

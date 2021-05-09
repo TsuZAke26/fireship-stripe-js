@@ -6,12 +6,14 @@
   "author": "TsuZAke26 <ricky.sanders62@gmail.com>",
   "private": true,
   "scripts": {
+    "dev": "quasar dev",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "@stripe/stripe-js": "^1.13.2",
+    "@vue-stripe/vue-stripe": "^4.1.8",
     "core-js": "^3.6.5",
     "quasar": "^2.0.0-beta.1"
   },

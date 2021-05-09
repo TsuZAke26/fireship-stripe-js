@@ -25,6 +25,11 @@ const routes: RouteRecordRaw[] = [
         name: 'CheckoutSuccess',
         component: () => import('pages/CheckoutSuccess.vue'),
       },
+      {
+        path: 'payment-intent',
+        name: 'PaymentIntent',
+        component: () => import('pages/PaymentIntent.vue'),
+      },
     ],
   },
 

@@ -64,7 +64,8 @@
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { defineComponent } from 'vue';
-import { loadStripe } from '@stripe/stripe-js';
+
+import useStripe from 'src/composables/useStripe';
 import useShoppingCart from 'src/composables/useShoppingCart';
 
 import ItemList from 'src/components/ItemList.vue';
@@ -77,11 +78,8 @@ export default defineComponent({
   },
   setup() {
     const handleCheckout = async () => {
-      const stripeApiKey = process.env.STRIPE_SECRET
-        ? process.env.STRIPE_SECRET
-        : '';
+      const stripe = await useStripe().getStripeApi();
 
-      const stripe = await loadStripe(stripeApiKey);
       if (stripe != null) {
         const body = {
           line_items: useShoppingCart().cartItems.map((cartItem) =>
@@ -95,7 +93,6 @@ export default defineComponent({
         );
 
         const { error } = await stripe.redirectToCheckout({ sessionId });
-
         if (error) {
           console.error(error.message);
         }
