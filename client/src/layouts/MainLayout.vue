@@ -102,6 +102,13 @@ export default defineComponent({
           name: 'PaymentIntent',
         },
       },
+      {
+        label: 'Customers Demo',
+        icon: 'mdi-account-circle',
+        route: {
+          name: 'Customers',
+        },
+      },
     ];
 
     return {

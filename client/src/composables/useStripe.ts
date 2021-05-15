@@ -4,9 +4,6 @@ import { loadStripe, PaymentIntent } from '@stripe/stripe-js';
 
 import { fetchFromAPI } from 'src/api/helpers';
 
-// Constants
-const stripeApiKey = process.env.STRIPE_SECRET || '';
-
 // Reactive values
 // eslint-disable-next-line prefer-const
 let paymentIntent: Ref<null> | Ref<PaymentIntent> = ref(null);
@@ -15,7 +12,8 @@ const useStripe = () => {
   const getValidAmount = (amount: number) =>
     Math.min(Math.max(amount, 50), 9999999);
 
-  const getStripeApi = async () => await loadStripe(stripeApiKey);
+  const getStripeApi = async () =>
+    await loadStripe(process.env.STRIPE_SECRET as string);
 
   const createPaymentIntent = async (amount: number) => {
     // Creating a fresh PaymentIntent for the user

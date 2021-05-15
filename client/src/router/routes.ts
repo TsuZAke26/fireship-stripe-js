@@ -30,6 +30,11 @@ const routes: RouteRecordRaw[] = [
         name: 'PaymentIntent',
         component: () => import('pages/PaymentIntent.vue'),
       },
+      {
+        path: 'customers',
+        name: 'Customers',
+        component: () => import('pages/Customers.vue'),
+      },
     ],
   },
 

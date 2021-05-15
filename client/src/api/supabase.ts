@@ -4,13 +4,13 @@ export async function readRowsFromTable(
 ) {
   const baseUrl = process.env.SUPABASE_API_URL
     ? process.env.SUPABASE_API_URL
-    : 'https://ofqelntiqtgttpzowcxt.supabase.co/rest/v1';
+    : 'https://ofqelntiqtgttpzowcxt.supabase.co';
 
   const apikey = process.env.SUPABASE_API_KEY
     ? process.env.SUPABASE_API_KEY
     : '';
 
-  const apiPath = `${baseUrl}/${tableName}?select=${
+  const apiPath = `${baseUrl}/rest/v1/${tableName}?select=${
     tableColumns ? tableColumns : '*'
   }`;
 
