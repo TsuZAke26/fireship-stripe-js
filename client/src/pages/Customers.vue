@@ -1,24 +1,23 @@
 <template>
-  <q-page padding class="column items-center q-gutter-y-md">
+  <q-page padding class="column items-center">
     <span class="text-h4">Customer Payment Details</span>
 
-    <div v-if="!currentUser" class="column items-center">
-      <span class="q-mb-md">Please login</span>
-      <div class="row items-center q-col-gutter-sm">
-        <q-input v-model="email" label="Email" type="email" />
-        <q-input v-model="password" label="Password" type="password" />
-      </div>
-      <div class="q-mt-md">
-        <q-btn
-          label="Sign In"
-          unelevated
-          color="primary"
-          @click="handleSignIn"
-        />
-      </div>
+    <div
+      v-if="!currentUser"
+      class="q-mt-md column justify-center q-gutter-y-md"
+      style="width: 100%; max-width: 1023px"
+    >
+      <q-input v-model="email" label="Email" type="email" />
+      <q-input v-model="password" label="Password" type="password" />
+      <q-btn
+        label="Login/Register"
+        unelevated
+        color="primary"
+        @click="handleAuth"
+      />
     </div>
 
-    <div v-else class="column items-center">
+    <div v-else class="column items-center justify-center q-mt-md">
       <span>Welcome, {{ currentUser.email }}</span>
 
       <!-- Space for showing cards (?) -->
@@ -36,6 +35,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+
 import useSupabase from 'src/composables/useSupabase';
 
 export default defineComponent({
@@ -43,18 +43,24 @@ export default defineComponent({
     const email = ref('');
     const password = ref('');
 
-    const handleSignUp = async () => {
-      await useSupabase().signUp({
+    const handleAuth = async () => {
+      const credentials = {
         email: email.value,
         password: password.value,
-      });
-    };
+      };
 
-    const handleSignIn = async () => {
-      await useSupabase().signIn({
-        email: email.value,
-        password: password.value,
-      });
+      const signInResult = await useSupabase().signIn(credentials);
+
+      if (signInResult === 0) {
+        const signUpResult = await useSupabase().signUp(credentials);
+
+        if (signUpResult === 0) {
+          alert('Unable to sign in or register this user');
+        }
+      }
+
+      email.value = '';
+      password.value = '';
     };
 
     const handleSignOut = async () => {
@@ -64,11 +70,9 @@ export default defineComponent({
     return {
       email,
       password,
-      handleSignUp,
-      handleSignIn,
+      handleAuth,
       handleSignOut,
       currentUser: useSupabase().currentUser,
-      currentSession: useSupabase().currentSession,
     };
   },
 });
