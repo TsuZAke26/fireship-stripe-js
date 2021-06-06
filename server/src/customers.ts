@@ -3,6 +3,25 @@ import Supabase from './supabase';
 
 import { stripe } from './';
 
+/**
+ * Creates a SetupIntent used to save a credit card for later use
+ * @param userId ID of the user in Supabase
+ * @returns Stripe.SetupIntent that allows for saving a payment method to a Stripe Customer
+ */
+export async function createSetupIntent(userId: string) {
+  const customer = await getOrCreateCustomer(userId);
+
+  return stripe.setupIntents.create({
+    customer: customer.id,
+  });
+}
+
+/**
+ * Gets the exsiting Stripe customer or creates a new record.
+ * @param userId ID of the user in Supabase
+ * @param params Optional parameters for creating a Customer in Stripe
+ * @returns The Stripe.Customer data for a user in Supabase
+ */
 export async function getOrCreateCustomer(
   userId: string,
   params?: Stripe.CustomerCreateParams
@@ -11,7 +30,7 @@ export async function getOrCreateCustomer(
   const { data, error } = await Supabase.from('users')
     .select('email, stripe_customer_id')
     .eq('id', userId)
-    .limit(1);
+    .single();
 
   // Reject promise if the given user does not exist in Supabase
   if (error) {

@@ -4,11 +4,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.app = void 0;
+const expressRequestId = require('express-request-id')({ setHeader: false });
+const morgan = require('morgan');
+const jwt = require('jsonwebtoken');
+const supabase_1 = __importDefault(require("./supabase"));
 const express_1 = __importDefault(require("express"));
 exports.app = express_1.default();
 /**
  * Express middleware setup
  */
+// Log incoming HTTP requests
+exports.app.use(expressRequestId);
+// morgan.token('id', (req: any) => req.id.split('-')[0]);
+morgan.token('id', (req) => req.id);
+exports.app.use(morgan('[:date[iso] #:id] Started :method :url for :remote-addr', {
+    immediate: true,
+}));
+exports.app.use(morgan('[:date[iso] #:id] Completed :status with content length :res[content-length] in :response-time ms'));
 // Allow Express to stringify JSON to be interpreted correctly
 exports.app.use(express_1.default.json());
 // Allow other origins to call Express endpoints
@@ -18,6 +30,49 @@ exports.app.use(cors_1.default({ origin: true }));
 exports.app.use(express_1.default.json({
     verify: (req, res, buffer) => (req['rawBody'] = buffer),
 }));
+// Decodes Supabase user JWT and adds user to request data
+exports.app.use(decodeJWT);
+// Decodes JSON Web Token sent with API request.
+async function decodeJWT(req, res, next) {
+    var _a, _b;
+    if ((_b = (_a = req.headers) === null || _a === void 0 ? void 0 : _a.authorization) === null || _b === void 0 ? void 0 : _b.startsWith('Bearer ')) {
+        // Pull out the JWT sent for the Authorization header
+        const authToken = req.headers.authorization.split('Bearer ')[1];
+        try {
+            // Verify token is for an authenticated user
+            const decodedToken = await verifyAuthToken(authToken);
+            // Add successfully decoded user data (i.e. user session is valid) to request data
+            req['currentUser'] = decodedToken;
+        }
+        catch (error) {
+            console.error(error);
+            // Return unauthenticated HTTP response code if user is not authenticated
+            res.status(401).send({ status: 'FAILED', message: error.message });
+        }
+    }
+    next();
+}
+async function verifyAuthToken(token) {
+    const decodedJWT = jwt.verify(token, process.env.SUPABASE_JWT_SECRET);
+    const { aud: auth, sub: id } = decodedJWT;
+    // Look up user ID in Supabase
+    const { data, error } = await supabase_1.default
+        .from('users')
+        .select('id')
+        .eq('id', id);
+    if (error) {
+        throw new Error(error.message);
+    }
+    // Verify that "sub" is a user that exists (has a record in "users" table)
+    if (data.length === 0) {
+        throw new Error('User does not exist');
+    }
+    // Verify that "aud" from JWT is "authenticated" (user is authenticated)
+    else if (auth !== 'authenticated') {
+        throw new Error('User is not authenticated');
+    }
+    return decodedJWT;
+}
 /**
  * API Endpoints
  */
@@ -38,7 +93,7 @@ exports.app.get('/products', runAsync(async (req, res) => {
 }));
 // Allow Stripe checkout sessions to be created
 const checkout_1 = require("./checkout");
-exports.app.post('/create-checkout-session/', runAsync(async ({ body }, res) => {
+exports.app.post('/create-checkout-session', runAsync(async ({ body }, res) => {
     res.send(await checkout_1.createStripeCheckoutSession(body.line_items));
 }));
 // Allow Stripe payment intents to be created
@@ -47,6 +102,18 @@ exports.app.post('/payments', runAsync(async ({ body }, res) => {
     // console.log('payments - body: ', body);
     res.send(await payments_1.createPaymentIntent(body.amount));
 }));
+// Testing JWT validation
+exports.app.post('/jwt', (req, res) => {
+    // console.log('currentUser: ', req['currentUser']);
+    res.status(200).send({ status: 'Success' });
+});
+// import { createSetupIntent } from './customers';
+// app.post(
+//   '/wallet',
+//   runAsync(async (req: Request, res: Response) => {
+// Validate user
+//   })
+// );
 /**
  * Webhooks
  */
