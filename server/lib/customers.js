@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getOrCreateCustomer = exports.createSetupIntent = void 0;
+exports.getOrCreateCustomer = exports.listPaymentMethods = exports.createSetupIntent = void 0;
 const supabase_1 = __importDefault(require("./supabase"));
 const _1 = require("./");
 /**
@@ -18,6 +18,19 @@ async function createSetupIntent(userId) {
     });
 }
 exports.createSetupIntent = createSetupIntent;
+/**
+ * Returns a list of payment methods for a Stripe.Customer user
+ * @param userId ID of the user in Supabase
+ * @returns List of Stripe payment methods for the given user
+ */
+async function listPaymentMethods(userId) {
+    const customer = await getOrCreateCustomer(userId);
+    return _1.stripe.paymentMethods.list({
+        customer: customer.id,
+        type: 'card',
+    });
+}
+exports.listPaymentMethods = listPaymentMethods;
 /**
  * Gets the exsiting Stripe customer or creates a new record.
  * @param userId ID of the user in Supabase

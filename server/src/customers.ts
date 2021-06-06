@@ -17,6 +17,20 @@ export async function createSetupIntent(userId: string) {
 }
 
 /**
+ * Returns a list of payment methods for a Stripe.Customer user
+ * @param userId ID of the user in Supabase
+ * @returns List of Stripe payment methods for the given user
+ */
+export async function listPaymentMethods(userId: string) {
+  const customer = await getOrCreateCustomer(userId);
+
+  return stripe.paymentMethods.list({
+    customer: customer.id,
+    type: 'card',
+  });
+}
+
+/**
  * Gets the exsiting Stripe customer or creates a new record.
  * @param userId ID of the user in Supabase
  * @param params Optional parameters for creating a Customer in Stripe

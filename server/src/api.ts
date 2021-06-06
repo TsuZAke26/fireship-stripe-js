@@ -91,6 +91,17 @@ async function verifyAuthToken(token: string) {
   return decodedJWT;
 }
 
+function validateUser(req: Request) {
+  const user = req['currentUser'];
+  if (!user) {
+    throw new Error(
+      'You must be logged in to make this request. i.e. Authorization: Bearer <token>'
+    );
+  }
+
+  return user;
+}
+
 /**
  * API Endpoints
  */
@@ -133,24 +144,36 @@ import { createPaymentIntent } from './payments';
 app.post(
   '/payments',
   runAsync(async ({ body }: Request, res: Response) => {
-    // console.log('payments - body: ', body);
     res.send(await createPaymentIntent(body.amount));
   })
 );
 
 // Testing JWT validation
 app.post('/jwt', (req: Request, res: Response) => {
-  // console.log('currentUser: ', req['currentUser']);
-  res.status(200).send({ status: 'Success' });
+  res.status(200).send({ status: 'Success', currentUser: req['currentUser'] });
 });
 
-// import { createSetupIntent } from './customers';
-// app.post(
-//   '/wallet',
-//   runAsync(async (req: Request, res: Response) => {
-// Validate user
-//   })
-// );
+import { createSetupIntent, listPaymentMethods } from './customers';
+// Retrieve a list of all payment cards for the user
+app.get(
+  '/wallet',
+  runAsync(async (req: Request, res: Response) => {
+    const user = validateUser(req);
+    const wallet = await listPaymentMethods(user.sub);
+    res.send(wallet.data);
+  })
+);
+
+// Create Stripe SetupIntent to allow user to save a new payment method
+app.post(
+  '/wallet',
+  runAsync(async (req: Request, res: Response) => {
+    const user = validateUser(req);
+    const setupIntent = await createSetupIntent(user.sub);
+
+    res.send(setupIntent);
+  })
+);
 
 /**
  * Webhooks
