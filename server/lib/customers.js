@@ -60,7 +60,7 @@ async function getOrCreateCustomer(userId, params) {
             } }, params));
         // Update 'users' table with new Stripe Customer id
         const { error } = await supabase_1.default.from('users')
-            .update({ stripeCustomerId: customer.id })
+            .update({ stripe_customer_id: customer.id })
             .match({ id: userId });
         // Rollback creation of Stripe customer if unable to save id to 'users' in Supabase
         if (error) {

@@ -10,10 +10,11 @@ export const app = express();
 /**
  * Express middleware setup
  */
-// Log incoming HTTP requests
+// Add ID to each incoming request
 app.use(expressRequestId);
-// morgan.token('id', (req: any) => req.id.split('-')[0]);
-morgan.token('id', (req: any) => req.id);
+
+// Log incoming HTTP requests
+morgan.token('id', (req: any) => req.id.split('-')[0]);
 app.use(
   morgan('[:date[iso] #:id] Started :method :url for :remote-addr', {
     immediate: true,
@@ -32,7 +33,7 @@ app.use(express.json());
 import cors from 'cors';
 app.use(cors({ origin: true }));
 
-// Sets rawBody for webhook testing
+// Sets rawBody request header for webhook testing
 app.use(
   express.json({
     verify: (req, res, buffer) => (req['rawBody'] = buffer),

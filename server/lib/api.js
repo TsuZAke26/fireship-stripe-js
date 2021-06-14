@@ -13,10 +13,10 @@ exports.app = express_1.default();
 /**
  * Express middleware setup
  */
-// Log incoming HTTP requests
+// Add ID to each incoming request
 exports.app.use(expressRequestId);
-// morgan.token('id', (req: any) => req.id.split('-')[0]);
-morgan.token('id', (req) => req.id);
+// Log incoming HTTP requests
+morgan.token('id', (req) => req.id.split('-')[0]);
 exports.app.use(morgan('[:date[iso] #:id] Started :method :url for :remote-addr', {
     immediate: true,
 }));
@@ -26,7 +26,7 @@ exports.app.use(express_1.default.json());
 // Allow other origins to call Express endpoints
 const cors_1 = __importDefault(require("cors"));
 exports.app.use(cors_1.default({ origin: true }));
-// Sets rawBody for webhook testing
+// Sets rawBody request header for webhook testing
 exports.app.use(express_1.default.json({
     verify: (req, res, buffer) => (req['rawBody'] = buffer),
 }));

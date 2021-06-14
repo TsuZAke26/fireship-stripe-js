@@ -79,8 +79,7 @@ export default defineComponent({
   setup() {
     const handleCheckout = async () => {
       const stripe = await useStripe().getStripeApi();
-
-      if (stripe != null) {
+      if (stripe !== null) {
         const body = {
           line_items: useShoppingCart().cartItems.map((cartItem) =>
             useShoppingCart().convertCartItemToStripeLineItem(cartItem)
