@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { PaymentMethod } from '@stripe/stripe-js';
+
 import { CartItem } from 'src/interfaces/ICartItem';
 import { InventoryItem } from 'src/interfaces/IInventoryItem';
+
+import useSupabase from 'src/composables/useSupabase';
 
 const API = process.env.SERVER_BASE_URL
   ? process.env.SERVER_BASE_URL
@@ -76,6 +80,17 @@ export function convertStripeAmountToPrice(amount: number, currency: string) {
   return currencySymbol + currencyAmount;
 }
 
+export function transformStripeCardToString(card?: PaymentMethod.Card) {
+  let result = '';
+
+  if (card) {
+    const { last4, brand, exp_month, exp_year } = card;
+    result = `${brand} **** **** **** ${last4} expires ${exp_month}/${exp_year}`;
+  }
+
+  return result;
+}
+
 export async function fetchFromAPI(
   endpointURL: string,
   opts?: Record<string, unknown>
@@ -88,6 +103,7 @@ export async function fetchFromAPI(
     ...(body != null && { body: JSON.stringify(body) }),
     headers: {
       'Content-Type': 'application/json',
+      authorization: `Bearer ${useSupabase().currentUserAuth.value as string}`,
     },
   });
 

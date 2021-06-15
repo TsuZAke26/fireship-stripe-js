@@ -23,6 +23,7 @@ supabase.auth.onAuthStateChange((event, session) => {
 
 const currentSession: Ref<Session | null> = ref(null);
 const currentUser = computed(() => currentSession.value?.user);
+const currentUserAuth = computed(() => currentSession.value?.access_token);
 
 function verifyUserCredentials(credentials: UserCredentials) {
   const { email, password } = credentials;
@@ -104,6 +105,7 @@ const useSupabase = () => {
   return {
     supabase,
     currentUser,
+    currentUserAuth,
     currentSession,
     signUp,
     signIn,

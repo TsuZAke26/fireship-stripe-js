@@ -2,6 +2,7 @@
   <q-page padding class="column items-center">
     <span class="text-h4">Customer Payment Details</span>
 
+    <!-- User not signed in -->
     <div
       v-if="!currentUser"
       class="q-mt-md column justify-center q-gutter-y-md"
@@ -17,18 +18,26 @@
       />
     </div>
 
-    <div v-else class="column items-center justify-center q-mt-md">
-      <span>Welcome, {{ currentUser.email }}</span>
+    <!-- User signed in  -->
+    <div
+      v-else
+      class="q-mt-md column q-gutter-y-md"
+      style="width: 100%; max-width: 1023px"
+    >
+      <span class="row justify-center">Welcome, {{ currentUser.email }}</span>
 
-      <!-- Space for showing cards (?) -->
-      <div class="q-mt-md">
-        <q-btn
-          label="Sign Out"
-          unelevated
-          color="primary"
-          @click="handleSignOut"
-        />
-      </div>
+      <customer-signed-in />
+
+      <q-card flat bordered class="row justify-center">
+        <q-card-section>
+          <q-btn
+            :label="`Sign Out ${currentUser.email}`"
+            unelevated
+            color="primary"
+            @click="handleSignOut"
+          />
+        </q-card-section>
+      </q-card>
     </div>
   </q-page>
 </template>
@@ -38,7 +47,10 @@ import { defineComponent, ref } from 'vue';
 
 import useSupabase from 'src/composables/useSupabase';
 
+import CustomerSignedIn from 'src/components/CustomerSignedIn.vue';
+
 export default defineComponent({
+  components: { CustomerSignedIn },
   setup() {
     const email = ref('');
     const password = ref('');
@@ -73,6 +85,7 @@ export default defineComponent({
       handleAuth,
       handleSignOut,
       currentUser: useSupabase().currentUser,
+      currentUserAuth: useSupabase().currentUserAuth,
     };
   },
 });

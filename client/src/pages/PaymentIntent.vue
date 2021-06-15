@@ -91,7 +91,6 @@ import { computed, defineComponent, onUnmounted, ref } from 'vue';
 
 import useStripe from 'src/composables/useStripe';
 
-// import StripeCard from 'src/components/StripeCard.vue';
 import StripeCard3 from 'src/components/StripeCard3.vue';
 
 import { convertStripeAmountToPrice } from 'src/api/helpers';

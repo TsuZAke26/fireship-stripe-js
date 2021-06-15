@@ -48,10 +48,8 @@ async function getOrCreateCustomer(userId, params) {
         console.error(error.message);
         return Promise.reject();
     }
-    console.log(data);
     // Destructure email and stripe_customer_id from returned user
-    const userRowData = data[0];
-    const { email, stripe_customer_id: stripeCustomerId } = userRowData;
+    const { email, stripe_customer_id: stripeCustomerId } = data;
     // If there is no Stripe Customer tied to the application user
     if (!stripeCustomerId) {
         // Create new Stripe Customer

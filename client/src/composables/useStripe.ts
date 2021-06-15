@@ -3,7 +3,7 @@ import { computed, ref, Ref } from 'vue';
 import {
   loadStripe,
   PaymentIntent,
-  // SetupIntent,
+  SetupIntent,
   Stripe,
   StripeCardElement,
 } from '@stripe/stripe-js';
@@ -15,7 +15,7 @@ const stripe: Ref<Stripe | null> = ref(null);
 
 // Stripe intents
 const paymentIntent: Ref<PaymentIntent | null> = ref(null);
-// const setupIntent: Ref<SetupIntent | null> = ref(null);
+const setupIntent: Ref<SetupIntent | null> = ref(null);
 
 // Stripe elements
 const cardElement: Ref<StripeCardElement | null> = ref(null);
@@ -59,6 +59,20 @@ const useStripe = () => {
     return paymentIntent.value != null && cardElement.value != null;
   });
 
+  const createSetupIntent = async () => {
+    if (setupIntent.value === null) {
+      setupIntent.value = await fetchFromAPI('wallet');
+    }
+  };
+
+  const updateSetupIntent = (newSetupIntent: SetupIntent | null) => {
+    setupIntent.value = newSetupIntent;
+  };
+
+  const readyToSaveCard = computed(() => {
+    return setupIntent.value != null && cardElement.value != null;
+  });
+
   return {
     stripe,
     getStripeApi,
@@ -69,6 +83,10 @@ const useStripe = () => {
     cardElement,
     createCardElement,
     readyToPay,
+    setupIntent,
+    createSetupIntent,
+    updateSetupIntent,
+    readyToSaveCard,
   };
 };
 

@@ -117,13 +117,13 @@ const customers_1 = require("./customers");
 exports.app.get('/wallet', runAsync(async (req, res) => {
     const user = validateUser(req);
     const wallet = await customers_1.listPaymentMethods(user.sub);
-    res.send(wallet.data);
+    res.status(200).send(wallet.data);
 }));
 // Create Stripe SetupIntent to allow user to save a new payment method
 exports.app.post('/wallet', runAsync(async (req, res) => {
     const user = validateUser(req);
     const setupIntent = await customers_1.createSetupIntent(user.sub);
-    res.send(setupIntent);
+    res.status(200).send(setupIntent);
 }));
 /**
  * Webhooks

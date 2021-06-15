@@ -161,7 +161,7 @@ app.get(
   runAsync(async (req: Request, res: Response) => {
     const user = validateUser(req);
     const wallet = await listPaymentMethods(user.sub);
-    res.send(wallet.data);
+    res.status(200).send(wallet.data);
   })
 );
 
@@ -172,7 +172,7 @@ app.post(
     const user = validateUser(req);
     const setupIntent = await createSetupIntent(user.sub);
 
-    res.send(setupIntent);
+    res.status(200).send(setupIntent);
   })
 );
 
