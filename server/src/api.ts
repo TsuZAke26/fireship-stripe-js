@@ -176,7 +176,12 @@ app.post(
   })
 );
 
-import { createSubscription } from './billing';
+import {
+  cancelSubscription,
+  createSubscription,
+  listSubscriptions,
+} from './billing';
+// Create new subscription
 app.post(
   '/subscriptions/',
   runAsync(async (req: Request, res: Response) => {
@@ -188,6 +193,27 @@ app.post(
       payment_method
     );
     res.send(subscription);
+  })
+);
+
+// Retrieve all subscriptions for user
+app.get(
+  '/subscriptions/',
+  runAsync(async (req: Request, res: Response) => {
+    const user = validateUser(req);
+
+    const subscriptions = await listSubscriptions(user.sub);
+
+    res.send(subscriptions.data);
+  })
+);
+
+// Unsubscribe/cancel a subscription
+app.patch(
+  '/subscriptions/:id',
+  runAsync(async (req: Request, res: Response) => {
+    const user = validateUser(req);
+    res.send(await cancelSubscription(user.sub, req.params.id));
   })
 );
 
