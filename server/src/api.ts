@@ -176,6 +176,21 @@ app.post(
   })
 );
 
+import { createSubscription } from './billing';
+app.post(
+  '/subscriptions/',
+  runAsync(async (req: Request, res: Response) => {
+    const user = validateUser(req);
+    const { plan, payment_method } = req.body;
+    const subscription = await createSubscription(
+      user.sub,
+      plan,
+      payment_method
+    );
+    res.send(subscription);
+  })
+);
+
 /**
  * Webhooks
  */
